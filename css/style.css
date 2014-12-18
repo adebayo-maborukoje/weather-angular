@@ -90,21 +90,36 @@ RESULTS
 
 
 #mapCanvas {
+  z-index: -20;
   margin: 0 auto;
   margin-top: 2em;
   height: auto;
-  /*background-color: white ;*/
+  background-color: white !important;
   min-height: 30em;
   width:97%;
   position: relative;
-  border:1px solid black;
+  /*border:1px solid black;*/
   
+ }
+
+ #mapCanvas::after {
+  content:"";
+  height: inherit;
+  width:inherit;
+  background-color: white;
+  opacity:0.2;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: 2; 
  }
 
 .status-canvas {
 color:tomato;
 text-align:center;
-line-height: 1.6em;
+line-height: 1.4em;
 font-weight:bold;
 font-family: Candara;
 }
