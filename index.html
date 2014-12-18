@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="weatherApp">
+<head>
+<meta charset="utf-8">
+<meta content-type="application/javascript">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WeatherAPI|| BAYO</title>
+<link rel="stylesheet" href="css/css_reset.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body ng-controller="weatherController">
+  <header>
+      <!-- <div id="logo"><img src="images/logo.jpg"></div> -->
+      <nav> 
+        <ul>
+          <li><a href="index.html">Home</a></li>      
+          <li><a href="index.html">Contact</a></li>
+          <li><a href="index.html">About Me</a></li>
+        </ul>
+      </nav>  
+  </header>
+  <main>
+    <div id="container">
+      <form name="WeatherForm" ng-submit='WeatherForm.search.$valid && displayResult()' ng-model="display" novalidate>
+         <input type="text" id="search" name="search" ng-model="user.search" placeholder="Enter Name of City, State or Country">
+         <input type="submit" id="submit" value="Forecast" ng-model="display"> 
+      </form>
+      <p class="status-canvas"><span ng-bind="statusDisplay" ></span><i ng-repeat = "data in results">{{data.name}}</i></p>
+        <div id="mapCanvas" ng-bind="mapCanvas"></div>
+        <div id="resultDiv2" ng-repeat="data in results"> 
+        <!-- ng-show="display" -->
+          <p ng-bind="data.name"> {{data.name}}</p>
+          <p ng-bind="data.coord.lon">Longitude is {{data.coord.lon}} </p>
+          <p>Latitude is {{data.coord.lat}} </p>
+          <p> temperature is {{data.main.temp}}</p>
+          <p> Weather is {{data.weather[0].main}}</p>
+        </div>
+        
+    </div>
+  </main>
+  <footer>
+        <div><h4> &copy; 2014 BAYO MABORUKOJE</h4></div>    
+
+  </footer>
+
+<script type="text/javascript" src="js/angular/angular.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
+<script type="text/javascript" src="js/script.js"></script>
+
+</body>
+</html>
