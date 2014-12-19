@@ -3,9 +3,9 @@ var weatherApp = angular.module('weatherApp', []);
 //weatherApp.controller('weatherController', function($scope, weatherAppFactory){
 weatherApp.controller('weatherController', function($scope, weatherAppFactory, googleMapDisplay){  
     $scope.results= [];
-
+    
     // $scope.mapCanvas = [];
-    // $scope.userSearch = [];
+    $scope.userSearch = "";
     //$scope.mapCanvas = " "; check this out 
     $scope.displayResult = function(){
       if($scope.userSearch === ""){
