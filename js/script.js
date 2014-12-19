@@ -3,37 +3,40 @@ var weatherApp = angular.module('weatherApp', []);
 //weatherApp.controller('weatherController', function($scope, weatherAppFactory){
 weatherApp.controller('weatherController', function($scope, weatherAppFactory, googleMapDisplay){  
     $scope.results= [];
-    $scope.mapCanvas = [];
-    //$scope.user.search = "";
+
+    // $scope.mapCanvas = [];
+    // $scope.userSearch = [];
     //$scope.mapCanvas = " "; check this out 
     $scope.displayResult = function(){
-     // $scope.user.search = "";
-      if($scope.user.search === ""){
+      if($scope.userSearch === ""){
+        console.log('got here');
         $scope.results= [];
-        $scope.mapCanvas = [];
+        $scope.mapStatus = false;
         $scope.statusDisplay = "PLEASE ENTER A NAME OF CITY OR STATE";
-      } else {
-        weatherAppFactory.getUrl($scope.user.search).
+      } 
+      else {
+        weatherAppFactory.getUrl($scope.userSearch).
         success( function (data, status) {
           if (data.cod === 200){
             $scope.results = [];
-            $scope.mapCanvas = [];
             $scope.statusDisplay = "Displaying Result for ";
+            $scope.mapStatus = true;
             $scope.results.push(data);
 
             googleMapDisplay.getMap(data.coord.lat, data.coord.lon);
           }else{
             //this is the error report generated when the query returns no value
-            console.log(status);
-            $scope.mapCanvas = [];
-            $scope.statusDisplay = "No Result Found";
+            console.log(data.cod);
+            $scope.mapStatus = false;
+            $scope.statusDisplay = data.message;
+
             $scope.results= [];
           }
         }) //end of the success promise
         .error( function (data, status) {
             //console log the error for not internet connection here
-          $scope.results = [];
-          $scope.mapCanvas =[];
+          $scope.mapStatus = false;
+          $scope.results = [];   
           $scope.statusDisplay = " Cannot Connect to the Server, Check your Internet Connection and try again " ;
 
         });//end of the error  promise

@@ -15,21 +15,27 @@ HEADER
 *************************/
 header {
   border-bottom: 0 solid black;
-  /*box-shadow: 0 0 1em 1px;*/
-  background: url('../images/logo.jpg') no-repeat;
-  background-size: contain;
-  height:3em;
-  
+  padding-bottom:2em;
+  height: auto;
+  min-height:4em;
+  border-bottom:2px solid black;
 }
 
 #logo {
-  background-color: blue;
-}
+  position:absolute;
+  background: url('../images/logo3.png') no-repeat;
+  background-size: cover;
+  width:12em;
+  height: 8em;
+  float:left;
+
+ }
 
 header nav ul li {
   display: inline-block;
   list-style-type: none;
   padding: 3em 0.5em 0 0;
+  color:white;
 }
 
 header nav ul li:not(:last-child) {
@@ -37,7 +43,7 @@ header nav ul li:not(:last-child) {
 }
 
 nav {
-  width:80%;
+  width:70%;
   float: right;
   font-size: 100%;
 }
@@ -48,7 +54,7 @@ nav ul {
 
 a:link,
 a:visited {
-  color: black;
+  color: white;
   text-decoration: none;
 }
 
@@ -59,6 +65,11 @@ a:hover {
 /************************
 BODY
 *************************/
+.container {
+  min-height: 500px;
+  margin-top:1em;
+}
+
 form {
   text-align: center;
   margin: 1em auto;
@@ -139,6 +150,11 @@ font-family: Candara;
   opacity: 0.8;
 }
 
+.resultInfo {
+  color:blue;
+  font-size: 1.23em;
+}
+
 .cloudy{
   background: url('../images/cloudy.png') no-repeat left ;
 }
@@ -169,10 +185,11 @@ FOOTER
 ****************************/
 
 footer {
-    width:100%;
-    bottom: 0px;
-    text-align: center;
-    float: right;
+  /*position: fixed;*/
+  width:100%;
+  /*bottom: 0;*/
+  text-align: center;
+  float: right;
  }
 
 footer div {

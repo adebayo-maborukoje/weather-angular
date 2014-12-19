@@ -10,7 +10,7 @@
 </head>
 <body ng-controller="weatherController">
   <header>
-      <!-- <div id="logo"><img src="images/logo.jpg"></div> -->
+      <div id="logo"></div>
       <nav> 
         <ul>
           <li><a href="index.html">Home</a></li>      
@@ -20,21 +20,20 @@
       </nav>  
   </header>
   <main>
-    <div id="container">
-      <form name="WeatherForm" ng-submit='WeatherForm.search.$valid && displayResult()' ng-model="display" novalidate>
-         <input type="text" id="search" name="search" ng-model="user.search" placeholder="Enter Name of City, State or Country">
-         <input type="submit" id="submit" value="Forecast" ng-model="display"> 
+    <div class="container">
+    <!-- WeatherForm.$valid &&  -->
+      <form name="WeatherForm" ng-submit='WeatherForm.$valid && displayResult()' ng-model="display" novalidate>
+         <input type="text" id="search" name="search" ng-model="userSearch" placeholder="Enter Name of City, State or Country">
+         <input type="submit" id="submit" value="Forecast"> 
       </form>
-      <p class="status-canvas"><span ng-bind="statusDisplay" ></span><i ng-repeat = "data in results">{{data.name}}</i></p>
-        <div id="mapCanvas" ng-bind="mapCanvas"></div>
+      <p class="status-canvas"><span ng-bind="statusDisplay" ></span><i ng-repeat = "data in results"><span ng-bind="data.name"></span></i></p>
+        <div id="mapCanvas" ng-show="mapStatus" ng-bind="mapCanvas"></div>
         <div id="resultDiv2" ng-repeat="data in results"> 
-        <!-- ng-show="display" -->
-          <p ng-bind="data.name"> {{data.name}}</p>
-          <p ng-bind="data.coord.lon"> </p>
-          <!-- Longitude is {{data.coord.lon}} -->
-          <p>Latitude is {{data.coord.lat}} </p>
-          <p> temperature is {{data.main.temp}}</p>
-          <p> Weather is {{data.weather[0].main}}</p>
+          <p class="resultInfo"><span ng-bind="data.name"></span></p>
+          <p class="resultInfo">Longitude : <span ng-bind="data.coord.lon"></span> </p>
+          <p class="resultInfo">Latitude : <span ng-bind="data.coord.lat"></span> </p>
+          <p class="resultInfo">Temperature : <span ng-bind="data.main.temp"></span> </p>
+          <p class="resultInfo">Weather : <span ng-bind="data.weather[0].main"></span> </p>
         </div>
         
     </div>
