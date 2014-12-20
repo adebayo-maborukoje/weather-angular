@@ -7,7 +7,9 @@
 <title>WeatherAPI|| BAYO</title>
 <link rel="stylesheet" href="css/css_reset.css">
 <link rel="stylesheet" href="css/style.css">
+<script type="text/javascript" src="js/angular/angular.js"></script>
 </head>
+
 <body ng-controller="weatherController">
   <header>
       <div id="logo"></div>
@@ -20,32 +22,28 @@
       </nav>  
   </header>
   <main>
-    <div class="container">
-    <!-- WeatherForm.$valid &&  -->
-      <form name="WeatherForm" ng-submit='WeatherForm.$valid && displayResult()' ng-model="display" novalidate>
+    <div class="container" >
+      <form name="WeatherForm" ng-submit='displayResult()' ng-model="display" novalidate>
          <input type="text" id="search" name="search" ng-model="userSearch" placeholder="Enter Name of City, State or Country">
          <input type="submit" id="submit" value="Forecast"> 
       </form>
-      <p class="status-canvas"><span ng-bind="statusDisplay" ></span><i ng-repeat = "data in results"><span ng-bind="data.name"></span></i></p>
-        <div id="mapCanvas" ng-show="mapStatus" ng-bind="mapCanvas"></div>
-        <div id="resultDiv2" ng-repeat="data in results"> 
+
+      <p class="statusCanvas" ng-cloak><span ng-bind="statusDisplay" ></span><i ng-repeat = "data in results"><span ng-bind="data.name"></span></i></p>
+      <div id="mapCanvas" ng-show="mapStatus" ng-bind="mapCanvas"></div>
+      <div id="resultDiv2" ng-repeat="data in results" ng-cloak> 
           <p class="resultInfo"><span ng-bind="data.name"></span></p>
           <p class="resultInfo">Longitude : <span ng-bind="data.coord.lon"></span> </p>
           <p class="resultInfo">Latitude : <span ng-bind="data.coord.lat"></span> </p>
           <p class="resultInfo">Temperature : <span ng-bind="data.main.temp"></span> </p>
           <p class="resultInfo">Weather : <span ng-bind="data.weather[0].main"></span> </p>
-        </div>
-        
+      </div> 
     </div>
   </main>
   <footer>
         <div><h4> &copy; 2014 BAYO MABORUKOJE</h4></div>    
-
   </footer>
-
-<script type="text/javascript" src="js/angular/angular.js"></script>
+<script type="text/javascript" src="js/jquery-1.11.1.js"></script>
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
 <script type="text/javascript" src="js/script.js"></script>
-
 </body>
 </html>

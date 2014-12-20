@@ -112,7 +112,7 @@ RESULTS
   /*border:1px solid black;*/
   
  }
-
+/*confirm if this is working*/
  #mapCanvas::after {
   content:"";
   height: inherit;
@@ -127,7 +127,7 @@ RESULTS
   z-index: 2; 
  }
 
-.status-canvas {
+.statusCanvas {
 color:tomato;
 text-align:center;
 line-height: 1.4em;
