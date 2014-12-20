@@ -1,41 +1,59 @@
 var weatherApp = angular.module('weatherApp', []);
 
 weatherApp.controller('weatherController', function($scope, weatherAppFactory, googleMapDisplay){  
-    var user = $scope;
-    user.results= [];
-    user.userSearch = "";
+    var app = $scope;
+    app.results= [];
+    app.userSearch = "";
 
-    user.displayResult = function(){
-      if(user.userSearch === ""){
-        // console.log('got here');
-        user.results= [];
-        user.mapStatus = false;
-        user.statusDisplay = "PLEASE ENTER A NAME OF CITY OR STATE";
+    app.displayResult = function(){
+      if(app.userSearch === ""){
+         app.results= [];
+        app.mapStatus = false;
+        app.statusDisplay = "PLEASE ENTER A NAME OF CITY OR STATE";
       } 
       else {
-        weatherAppFactory.getUrl(user.userSearch).
+        weatherAppFactory.getUrl(app.userSearch).
         success( function (data, status) {
           if (data.cod === 200){
-            user.results = [];
-            user.statusDisplay = "Displaying Result for ";
-            user.mapStatus = true;
-            user.results.push(data);
+            app.results = [];
+            app.statusDisplay = "Displaying Result for ";
+            app.mapStatus = true;
+            
+               // method 1  //
+
+            var temp = parseInt(data.main.temp, 10);
+                temp = Math.round(temp-273.15);
+           //     results.main.temp = temp;
+                app.results.push(data);
+                app.results.main.temp.push(temp);
+         
+              // End of method 1 //
+
+              // Method 2  for changing the temperature value//
+            app.$watch('results.main.temp', function (newValue, oldValue){
+              if(newValue){
+                var temp = parseInt(newValue, 10);
+                temp = Math.round(temp-273.15);
+              results.main.temp = temp;
+              }
+            });
+                //End of Method 2 //
 
             googleMapDisplay.getMap(data.coord.lat, data.coord.lon);
           }else{
             //this is the error report generated when the query returns no value
             console.log(data.cod);
-            user.mapStatus = false;
-            user.statusDisplay = data.message;
+            app.mapStatus = false;
+            app.statusDisplay = data.message;
 
-            user.results= [];
+            app.results= [];
           }
         }) //end of the success promise
         .error( function (data, status) {
             //console log the error for not internet connection here
-          user.mapStatus = false;
-          user.results = [];   
-          user.statusDisplay = " Cannot Connect to the Server, Check your Internet Connection and try again " ;
+          app.mapStatus = false;
+          app.results = [];   
+          app.statusDisplay = " Cannot Connect to the Server, Check your Internet Connection and try again " ;
 
         });//end of the error  promise
       } // end of else statement when query is not empty
@@ -49,6 +67,21 @@ weatherApp.controller('weatherController', function($scope, weatherAppFactory, g
 //                 $('#submit').val("Forecast").css('background-image', 'none');
 */
 }); // end of controller
+
+/* Method 3 for changing the temperature  */
+weatherApp.factory('tempCvtFactory', function(){
+    var tempConverter = {};
+    tempConverter.convert = function(tempInKelvin){
+        console.log(tempInKelvin);
+
+        var temp = parseInt(tempInKelvin, 10);
+        temp = Math.round(tempInKelvin - 273.15);
+        console.log(temp);
+        return temp;
+    };
+    return tempConverter;
+});
+ /* End of  Method 3*/
 
 weatherApp.factory('weatherAppFactory', ['$http',  function($http) {
      var requestParameters = {};
@@ -79,6 +112,3 @@ weatherApp.factory ('googleMapDisplay', function () {
 }); //end of googleMapDisplay factory
 
 //
-
-
-
