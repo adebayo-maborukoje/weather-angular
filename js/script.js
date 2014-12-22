@@ -1,6 +1,6 @@
 var weatherApp = angular.module('weatherApp', []);
 
-weatherApp.controller('weatherController', function($scope, weatherAppFactory,btnEffect, googleMapDisplay){  
+weatherApp.controller('weatherController', function($scope, tempConverter, weatherAppFactory,btnEffect, googleMapDisplay){  
     var app = $scope;
     app.results= [];
     app.userSearch = "";
@@ -23,29 +23,12 @@ weatherApp.controller('weatherController', function($scope, weatherAppFactory,bt
             app.statusDisplay = "Displaying Result for ";
             app.mapStatus = true;
             app.results.push(data);
-               // method 1  //
-
-            var temp = parseInt(data.main.temp, 10);
-                temp = Math.round(temp-273.15);
-               results.main.temp = temp; 
-           // confirm if the  =  or the push works
-                
-            //    app.results.main.temp.push(temp);
-         
-              // End of method 1 //
-
-              // Method 2  for changing the temperature value//
-      /*      app.$watch('results.main.temp', function (newValue, oldValue){
-              if(newValue){
-                var temp = parseInt(newValue, 10);
-                temp = Math.round(temp-273.15);
-              results.main.temp = temp;
-              }
-            }); */
-                //End of Method 2 //
-
+            var tempInCelcius = tempConverter.convertTemp(data.main.temp);
+            console.log("my "+ tempInCelcius);
+            data.main.temp = tempInCelcius;
             googleMapDisplay.getMap(data.coord.lat, data.coord.lon);
-          }else{
+          }
+          else{
             //this is the error report generated when the query returns no value
             console.log(data.cod);
             app.mapStatus = false;
@@ -53,18 +36,29 @@ weatherApp.controller('weatherController', function($scope, weatherAppFactory,bt
 
             app.results= [];
           }
+          btnEffect.getStatus(false);
         }) //end of the success promise
-        .error( function (data, status) {
+        .error(function (data, status) {
             //console log the error for non 200 reports internet connection here
           app.mapStatus = false;
           app.results = [];   
           app.statusDisplay = " Cannot Connect to the Server, Check your Internet Connection and try again " ;
-
+          btnEffect.getStatus(false);
         });
-        btnEffect.getStatus(false);
       } 
     }; 
 }); 
+
+weatherApp.factory( 'tempConverter', function(){
+  var tempObj = {};
+  tempObj.convertTemp = function (temp){
+    var currentTemp = parseInt(temp, 10);
+        currentTemp = Math.floor(currentTemp-273.15);
+        console.log(currentTemp);
+        return currentTemp;
+       } 
+return tempObj;
+});
 
 weatherApp.factory('weatherAppFactory', ['$http',  function($http) {
      var requestParameters = {};
@@ -82,7 +76,8 @@ weatherApp.factory ('googleMapDisplay', function () {
 
   mapObj.getMap = function(latitude, longitude) {
       var mapOptions = {    
-            center: { lat: latitude, 
+            center: { 
+                    lat: latitude, 
                     lng: longitude
                   },
             zoom: 7
@@ -107,6 +102,4 @@ weatherApp.factory ('btnEffect', function () {
     }
   };
 });
-
-
 //write a service for the images that are displayed in respect to the temp
