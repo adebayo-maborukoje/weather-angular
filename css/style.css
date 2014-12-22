@@ -15,21 +15,26 @@ HEADER
 *************************/
 header {
   border-bottom: 0 solid black;
-  /*box-shadow: 0 0 1em 1px;*/
-  background: url('../images/logo.jpg') no-repeat;
-  background-size: contain;
-  height:3em;
-  
+  padding-bottom:2em;
+  height: auto;
+  min-height:4em;
+  border-bottom:2px solid black;
 }
 
 #logo {
-  background-color: blue;
-}
+  position:absolute;
+  background: url('../images/logo3.png') no-repeat;
+  background-size: cover;
+  width:12em;
+  height: 8em;
+  float:left;
+ }
 
 header nav ul li {
   display: inline-block;
   list-style-type: none;
   padding: 3em 0.5em 0 0;
+  color:white;
 }
 
 header nav ul li:not(:last-child) {
@@ -37,7 +42,7 @@ header nav ul li:not(:last-child) {
 }
 
 nav {
-  width:80%;
+  width:70%;
   float: right;
   font-size: 100%;
 }
@@ -48,7 +53,7 @@ nav ul {
 
 a:link,
 a:visited {
-  color: black;
+  color: white;
   text-decoration: none;
 }
 
@@ -59,6 +64,11 @@ a:hover {
 /************************
 BODY
 *************************/
+.container {
+  min-height: 500px;
+  margin-top:1em;
+}
+
 form {
   text-align: center;
   margin: 1em auto;
@@ -72,8 +82,7 @@ form {
   border-top-left-radius: 1em;  
   border-bottom-left-radius: 1em; 
   outline: 0;
-  padding-left: 1em;
-    
+  padding-left: 1em; 
 }
 /************************
 RESULTS 
@@ -85,28 +94,42 @@ RESULTS
   width:6em;    
   outline: 0;
   position: relative;
-  left:-4px 
+  left:-4px;
+  background-color: white;
 }
 
-
 #mapCanvas {
+  z-index: -20;
   margin: 0 auto;
   margin-top: 2em;
   height: auto;
-  /*background-color: white ;*/
+  background-color: white !important;
   min-height: 30em;
   width:97%;
   position: relative;
-  border:1px solid black;
-  
  }
 
-.status-canvas {
-color:tomato;
-text-align:center;
-line-height: 1.6em;
-font-weight:bold;
-font-family: Candara;
+/*
+ #mapCanvas::after {
+  content:"";
+  height: inherit;
+  width:inherit;
+  background-color: white;
+  opacity:0.2;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: 2; 
+ }
+*/
+.statusCanvas {
+  color:tomato;
+  text-align:center;
+  line-height: 1.4em;
+  font-weight:bold;
+  font-family: Candara;
 }
 
 #resultDiv2 {
@@ -124,6 +147,11 @@ font-family: Candara;
   opacity: 0.8;
 }
 
+.resultInfo {
+  color:blue;
+  font-size: 1.23em;
+}
+/* add the icon button to in relative to the temp change
 .cloudy{
   background: url('../images/cloudy.png') no-repeat left ;
 }
@@ -147,25 +175,24 @@ font-family: Candara;
 .cold{
   color:blue;
   font-size:1.1em;
-}
+}*/
 
 /****************************
 FOOTER
 ****************************/
 
 footer {
-    width:100%;
-    bottom: 0px;
-    text-align: center;
-    float: right;
+  width:100%;
+  text-align: center;
+  float: right;
  }
 
 footer div {
-    margin: 0 auto;
-    width:70%;
-    height: inherit;
-    border-top:2px solid black;
-    color:black;
-    text-align: center;
-    border-radius: 1em;
+  margin: 0 auto;
+  width:70%;
+  height: inherit;
+  border-top:2px solid black;
+  color:black;
+  text-align: center;
+  border-radius: 1em;
 }

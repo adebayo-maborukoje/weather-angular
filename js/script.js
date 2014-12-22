@@ -1,193 +1,105 @@
 var weatherApp = angular.module('weatherApp', []);
 
-//weatherApp.controller('weatherController', function($scope, weatherAppFactory){
-weatherApp.controller('weatherController', function($scope, weatherAppFactory, googleMapDisplay){  
-    $scope.results= [];
-    $scope.mapCanvas = [];
-    //$scope.user.search = "";
-    //$scope.mapCanvas = " "; check this out 
-    $scope.displayResult = function(){
-     // $scope.user.search = "";
-      if($scope.user.search === ""){
-        $scope.results= [];
-        $scope.mapCanvas = [];
-        $scope.statusDisplay = "PLEASE ENTER A NAME OF CITY OR STATE";
-      } else {
-        weatherAppFactory.getUrl($scope.user.search).
+  weatherApp.controller('weatherController', function($scope, tempConverter, weatherAppFactory,btnEffect, googleMapDisplay){  
+    var app = $scope;
+    app.results= [];
+    app.userSearch = "";
+
+    app.displayResult = function(){
+      if(app.userSearch === ""){
+        btnEffect.getStatus(true);
+        app.results= [];
+        app.mapStatus = false;
+        app.statusDisplay = "PLEASE ENTER A NAME OF CITY OR STATE";
+        btnEffect.getStatus(false);
+      } 
+      else {
+        btnEffect.getStatus(true);
+        weatherAppFactory.getUrl(app.userSearch).
         success( function (data, status) {
+
           if (data.cod === 200){
-            $scope.results = [];
-            $scope.mapCanvas = [];
-            $scope.statusDisplay = "Displaying Result for ";
-            $scope.results.push(data);
-
+            app.results = [];
+            app.statusDisplay = "Displaying Result for ";
+            app.mapStatus = true;
+            app.results.push(data);
+            var tempInCelcius = tempConverter.convertTemp(data.main.temp);
+            // console.log("my "+ tempInCelcius);
+            data.main.temp = tempInCelcius;
             googleMapDisplay.getMap(data.coord.lat, data.coord.lon);
-          }else{
-            //this is the error report generated when the query returns no value
-            console.log(status);
-            $scope.mapCanvas = [];
-            $scope.statusDisplay = "No Result Found";
-            $scope.results= [];
           }
+          else{
+            //this is the error report generated when the query returns no value
+            console.log(data.cod);
+            app.mapStatus = false;
+            app.statusDisplay = data.message;
+
+            app.results= [];
+          }
+          btnEffect.getStatus(false);
         }) //end of the success promise
-        .error( function (data, status) {
-            //console log the error for not internet connection here
-          $scope.results = [];
-          $scope.mapCanvas =[];
-          $scope.statusDisplay = " Cannot Connect to the Server, Check your Internet Connection and try again " ;
+        .error(function (data, status) {
+            //console log the error for non 200 reports internet connection here
+          app.mapStatus = false;
+          app.results = [];   
+          app.statusDisplay = " Cannot Connect to the Server, Check your Internet Connection and try again " ;
+          btnEffect.getStatus(false);
+        });
+      } 
+    }; 
+  }); 
 
-        });//end of the error  promise
-      } // end of else statement when query is not empty
-      
-    } // end of displayResult function
-      
-/*
- do the animation for the searching bar and css styling  learn about ngAnimate
-*/
-}); // end of controller
+//ALL FACTORIES AND SERVICES GOES HERE 
 
-weatherApp.factory('weatherAppFactory', ['$http',  function($http) {
-     var requestParameters = {};
+  weatherApp.factory( 'tempConverter', function(){
+    var tempObj = {};
+    tempObj.convertTemp = function (temp){
+      var currentTemp = parseInt(temp, 10);
+          currentTemp = Math.floor(currentTemp-273.15);
+          console.log(currentTemp);
+          return currentTemp;
+         } 
+  return tempObj;
+  });
+
+  weatherApp.factory('weatherAppFactory', ['$http',  function($http) {
+    var requestParameters = {};
     var url ="http://api.openweathermap.org/data/2.5/weather?";
    
     requestParameters.getUrl = function(query) {
-      
-      return $http.get(url, { params: { q : query } } );
-    };
-  return requestParameters;
-}]); //end of weatherAppFactory 
-
-weatherApp.factory ('googleMapDisplay', function () {
-  var mapObj ={};
-
-  mapObj.getMap = function(latitude, longitude) {
-                // console.log(longitude +" and "+ latitude);
-                var mapOptions = {    
-                      center: {
-                        lat: latitude, 
-                        lng: longitude
-                        },
-                        zoom: 7
-                      };
-      var map = new google.maps.Map(document.getElementById('mapCanvas'), mapOptions);
+        return $http.get(url, { params: { q : query } } );
       };
-     return mapObj;
-}); //end of googleMapDisplay factory
+    return requestParameters;
+  }]); //end of weatherAppFactory 
 
-//
+  weatherApp.factory ('googleMapDisplay', function () {
+    var mapObj ={};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// var weatherAPI = {
-//   address: $('#search'),
-//   init: function (){
-//           $('form').submit(function (e) {
-//             e.preventDefault();
-//             if(weatherAPI.address.val() === "" ){
-//                weatherAPI.errorMsg();
-//             }
-//             else { 
-//             $('#submit').prop('disabled', true);
-//             $('#submit').val(" ").css('background', 'url("./images/loading2.gif") no-repeat white center'); 
-//              var url ="http://api.openweathermap.org/data/2.5/weather?";
-//              var requestParameters = {
-//                q : weatherAPI.address.val()
-//              };
-//                 $.ajax(url, {
-//                     success: weatherAPI.response,
-//                     type: "get",
-//                     data: requestParameters,
-//                     error: weatherAPI.errorfile 
-//                    });  
-//           } //end of else statement      
-//         }); //end of the click function
-//   }, // end of the init method 
-//   response : function (user) {
-//             // var list.main= ;
-//             if(user.cod !== 200) {
-//               $('#mapCanvas').html('');
-//               weatherAPI.errorMsg();
-//               weatherAPI.btnEffect();
-//             } 
-//             else {
-//             var displayResult ='<table class="resultPane">';
-//             var temp = parseInt(user.main.temp, 10);
-//             temp = Math.round(temp-273.15);
-//               if( temp <= 6) {
-//                  displayResult += '<tr class="cloudy"><td colspan=2>' + user.name +'</td></tr>';
-//               }
-//               else if (temp >= 7 && temp <= 19){ 
-//                   displayResult += '<tr class="sunny"><td colspan=2>' + user.name +'</td></tr>';
-//               }
-//               else if(temp >= 20) {
-//                  displayResult += '<tr class="sun"><td colspan=2>' + user.name +'</td></tr>';
-//               }  
-//                 displayResult += '<tr><td> Country: </td><td>' + user.sys.country +'</td></tr>';
-//                 displayResult += '<tr><td> Latitude: </td><td>' + user.coord.lon +'</td></tr>';
-//                 displayResult += '<tr><td> longitude: </td><td>' + user.coord.lat +'</td></tr>';
-//                 $.each (user.weather, function(i, list){
-//                   displayResult += '<tr><td> Weather: </td><td>' + list.main+'</td></tr>';
-//                     // return list.main;
-//                 });
-              
-//                 var lngCoord = +user.coord.lon.toFixed(3);  
-//                 var latCoord = +user.coord.lat.toFixed(3);
-//                 console.log(temp);
-//                 if(temp <=15){  
-//                    displayResult += '<tr class="cold"><td> Current Temp: </td><td>' + temp +'&#x2103; </td></tr>';
-//                 }else if(temp){
-//                    displayResult += '<tr class="hot"><td> Current Temp: </td><td>' + temp +'&#x2103; </td></tr>';
-//                 }
-//                 displayResult += '</table>';
-//                 weatherAPI.mapDisplay(latCoord, lngCoord);
-//                 $('#resultDiv2').html(displayResult);
-//                 weatherAPI.btnEffect();
-//       };
-//   }, // end of the response method
-//   errorfile : function(){
-//               var displayResult ='<div class="error"> Your Request Cannot Be Processed at The Moment </div>';
-//                 $('#resultDiv2').html(displayResult); 
-//                 weatherAPI.btnEffect();                   
-//   },
-//   errorMsg: function (){
-//                 var displayResult ='<div class="error"> NO RESULT FOUND FOR THE SEARCHED PLACE PLEASE ENTER A VALID CITY, STATE OR COUNTRY </div>';
-//                   $('#resultDiv2').html(displayResult);
-//                   weatherAPI.btnEffect();
-//   },
-//   mapDisplay: function(latitude, longitude) {
-//                 // console.log(longitude +" and "+ latitude);
-//                 var mapOptions = {    
-//                       center: {
-//                         lat: latitude, 
-//                         lng: longitude
-//                         },
-//                         zoom: 7
-//                       };
-//       var map = new google.maps.Map(document.getElementById('mapCanvas'), mapOptions);
-//   }, 
-//   btnEffect : function() {
-//                 $('#submit').prop('disabled', false);
-//                 $('#submit').val("Forecast").css('background-image', 'none');
-//   }    
-// }; // end of the  weatherAPI object 
-// weatherAPI.init();
+    mapObj.getMap = function(latitude, longitude) {
+                  var mapOptions = {    
+                        center: {
+                          lat: latitude, 
+                          lng: longitude
+                          },
+                          zoom: 7
+                        };
+        var map = new google.maps.Map(document.getElementById('mapCanvas'), mapOptions);
+        };
+       return mapObj;
+  }); 
+  
+  weatherApp.factory ('btnEffect', function () {
+    return {
+      getStatus : function (BtnStatus) { 
+        if(BtnStatus){
+          $('#submit').prop('disabled', true);
+          $('#submit').val(" ").css('background', 'url("./images/loading2.gif") no-repeat white center');
+        }
+        else {
+          $('#submit').prop('disabled', false);
+          $('#submit').val("Forecast").css('background-image', 'none');
+        }
+        return;
+      }
+    };
+  });
